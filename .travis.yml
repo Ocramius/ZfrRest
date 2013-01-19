@@ -5,19 +5,13 @@ php:
   - 5.4
 
 before_script:
-  - cd ..
-  - git clone git://github.com/zendframework/ZendSkeletonApplication.git
-  - cd ZendSkeletonApplication
-  - cp ../ZfrRest/.travis/composer.json ./
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install
-  - rm -rf vendor/zfr/zfr-rest
-  - cp -r ../ZfrRest vendor/zfr/zfr-rest
-  - rm config/application.config.php && cp ../ZfrRest/.travis/application.config.php config/
+  - composer update --dev
+  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
 
 script:
-  - cd vendor/zfr/zfr-rest
   - phpunit
+  - output=$(php php-cs-fixer.phar fix -v --dry-run --level=psr2 ./src/); if [[ $output ]]; then while read -r line; do echo -e "\e[00;31m$line\e[00m"; done <<< "$output"; false; fi;
+  - php coverage-checker.php build/logs/clover.xml 1
 
 notifications:
   irc: "irc.freenode.org#zftalk.dev"

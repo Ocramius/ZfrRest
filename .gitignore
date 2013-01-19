@@ -8,6 +8,9 @@
 Thumbs.db
 phpunit.xml
 clover.xml
+composer.lock
+composer.phar
+cache.properties
 tmp/
 vendor/
-
+build/
